@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Demo</title>
+		<script>
+			intWidth = 0;
+			intHeight = 0;
+			intPixelCounter = 0;
+			function funStartup(){
+				var w = window,
+    				d = document,
+    				e = d.documentElement,
+    				g = d.getElementsByTagName('body')[0],
+    				x = w.innerWidth || e.clientWidth || g.clientWidth,
+				y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+				intWidth = x;
+				intHeight = y;
+				elmScreen = document.getElementById("divScreen");
+				strPrefix = "px";
+				var arrPixelColors = [funRandomColorNumber(),funRandomColorNumber(),funRandomColorNumber()];
+
+				for (intHeightCounter = 0; intHeightCounter < intHeight; intHeightCounter++) {
+					for (intWidthCounter = 0; intWidthCounter < intWidth; intWidthCounter++) { 
+						intPixelCounter++;		
+						intArrayElement = funRandomArrayElement();
+						arrPixelColors[intArrayElement] = Math.round( (arrPixelColors[intArrayElement] + funRandomColorNumber()) / 2 );
+						elmNewPixel = document.createElement("div");
+						elmNewPixel.setAttribute("id","divPixel" + intPixelCounter);
+						elmNewPixel.className = "clsPixel";
+						elmNewPixel.style.left = intWidthCounter + strPrefix;
+						elmNewPixel.style.top = intHeightCounter + strPrefix;
+						elmNewPixel.style.backgroundColor = "rgb(" + arrPixelColors[0] + "," + arrPixelColors[1] + "," + arrPixelColors[2] + ")";
+						elmScreen.appendChild(elmNewPixel);
+					}
+				}
+				funPixelKillerLoop(2000, 60);
+			}
+			function funRandomColorNumber(){
+				return Math.floor(Math.random() * (256 - 0)) + 0;
+			}
+			function funRandomArrayElement(){
+				return Math.floor(Math.random() * (3 - 0)) + 0;
+			}
+			function funPixelKillerByColor(incColorToKill){
+				for (intPixelKillerCounter = 1; intPixelKillerCounter < intPixelCounter; intPixelKillerCounter++) {
+					if(document.getElementById("divPixel" + intPixelKillerCounter)){
+						elmPixelToKill = document.getElementById("divPixel" + intPixelKillerCounter);
+						if(elmPixelToKill.style.backgroundColor.indexOf("" + incColorToKill + "") > -1){
+							elmPixelToKill.parentNode.removeChild(elmPixelToKill)
+						}
+					}
+				}
+			}
+			function funPixelKillerLoop(incTimerLength, incNumberOfLoops){
+				for (intPixelLoopCounter = 1; intPixelLoopCounter < incNumberOfLoops; intPixelLoopCounter++) {
+					setTimeout(function(){funPixelKillerByColor(funRandomColorNumber())}, (incTimerLength*intPixelLoopCounter));
+				}
+			}
+		</script>
+		<style>
+			*{
+				margin: 0px;
+				padding: opx;
+				border: 0px;
+			}
+			.clsPixel{
+				position: absolute;
+				width: 1px;
+				height: 1px;
+			}
+		</style>
+	</head>
+	<body onload="funStartup()">
+		<div id="divScreen">
+		</div>
+	</body>
+</html>
